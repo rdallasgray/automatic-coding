@@ -1,0 +1,12 @@
+---
+layout: post
+title: "So"
+date: 2013-04-21 22:19
+comments: true
+categories: 
+---
+It's my 40th birthday tomorrow, and I'm starting a blog. I seem, finally, to have some things to say: thoughts on software engineering, programming, computing history ... all sorts.
+
+I had a very nice thing happen to me today, which somewhat validates the beginning of my fifth Earthian decade: the maintainer of a library I use got excited about an idea I contributed (the idea was backed up by some working code, but it wasn't, like, a pull request or anything). This kind of engagement gives me real hope for my future, and my son's; I mean, all I ever had was Lego :).
+
+OK. Let's go. Watch these spaces.
