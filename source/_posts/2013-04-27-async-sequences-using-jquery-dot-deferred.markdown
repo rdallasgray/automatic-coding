@@ -3,7 +3,7 @@ layout: post
 title: "Async sequences using jQuery.Deferred"
 date: 2013-04-27 12:18
 comments: true
-categories: 
+categories: JavaScript, CoffeeScript, jQuery, programming
 ---
 At work, I've been coding on a project which has to wrangle a lot of
 asynchronous processes. At first, I stuck with the Node.js convention
@@ -45,10 +45,10 @@ quite a beautiful little five-liner:
 
 ```coffeescript
 sequence = (tasks) ->
-    seq = tasks[0]()
-    for task, i in tasks[1..]
-        seq = do (i) -> seq.then -> tasks[i + 1]()
-    seq
+  seq = tasks[0]()
+  for task, i in tasks[1..]
+    seq = do (i) -> seq.then -> tasks[i + 1]()
+  seq
 ```
 
 So, what's happening here? Well, we pass an array of tasks (functions
@@ -76,4 +76,3 @@ you had an array of length > 0, to avoid exceptions, and it would make
 sense to avoid the iteration altogether if the array were only of
 length 1. Nevertheless, I think it's a nice demonstration of both
 CoffeeScript's concision and `$.Deferred`'s flexibility.
-
