@@ -1,0 +1,212 @@
+---
+layout: post
+title: "Mod Lang"
+date: 2013-05-11 15:43
+comments: true
+categories: programming
+---
+It occurred to me this week that CoffeeScript is Javascript **with
+modern syntax**. The thought appeared unprompted, and I'm not writing here to
+argue that it's right or wrong; more that the *thought itself* gave me
+pause for thought.
+
+It made me realise that somewhere in my programming brain I was
+differentiating between 'old world' and 'new world' syntactic
+features, and the more I thought, the more interesting the thought
+was.
+
+So the reason I *am* writing here is to try to examine what it was
+about CoffeeScript that prompted the thought, by presenting some
+syntactic features that, to me, feel 'modern'. I'll also try to explain why
+I think each feature belongs in a modern language.
+
+##1. Stabby Lambdas
+The obvious number 1. CoffeeScript's lambda syntax uses the form
+`(arguments) -> body`. The style is probably derived from
+[Haskell](http://www.haskell.org/haskellwiki/Anonymous_function);
+[Erlang](http://www.erlang.org/doc/getting_started/seq_prog.html#id61265)
+also uses it, and it's more recently been adopted by
+[Scala](http://www.scala-lang.org/node/133),
+[C#](http://msdn.microsoft.com/en-us/library/bb397687.aspx) and (in a
+slightly backwards form)
+[Ruby](http://pragdave.blogs.pragprog.com/pragdave/2008/05/new-lambda-synt.html).
+
+What this says about language evolution is obvious, I think:
+programmers want to use anonymous functions. They want to create them
+quickly and easily, with a meaningful and noise-free syntax. I'd
+suggest that this is evidence of the current popularity of functional
+programming style, which is probably a result of the emerging
+necessity to program for concurrency. I'd also venture that most
+programmers using this style are interested less in concurrency
+(at the hardware level) than in a convenient syntax for working
+with event-driven systems (as well as a language-level
+[Strategy pattern](http://en.wikipedia.org/wiki/Strategy_pattern)).
+
+##2. Noise Reduction
+CoffeeScript makes parentheses optional in many cases (as does Ruby);
+it also, in certain cases, makes braces for declaring object literals optional; commas
+separating object key-value pairs and array elements can be replaced
+with newlines; semicolons as line delimiters are not used; comparison and
+logical operators can in many cases be replaced with equivalent
+English words (`===` with `is`, `!==` with `isnt`, `&&` with `and`,
+`||` with `or`, etc.).
+
+To the same effect, CoffeeScript, like Ruby, offers flexibility in
+conditional expressions, so that `unless` can be used in place of `if
+not`, and any conditional operator can be used postfix, allowing
+*bon mots* like `return unless x is 5`.
+
+This makes the language *easy to read*. It reads fluently,
+uninterrupted by messy, alienating punctuation. Sometimes this visual
+clarity is bought at the expense of semantic clarity, though, and the
+CoffeeScript compiler [can](http://jameswilliams.be/blog/entry/202)
+[bite](http://ceronman.com/2012/09/17/coffeescript-less-typing-bad-readability/)
+[you](http://tapestryjava.blogspot.co.uk/2012/08/coffeescript-cautions.html)
+if you're too *laissez-faire*. Also, how to 'phrase' your code becomes
+an additional, and possibly unwelcome, decision. Rubyists have long
+faced these issues, and adherence to the language's
+[idioms](http://stackoverflow.com/questions/613985/common-ruby-idioms)
+is now nearly as important as correct syntax.
+
+The movement to greater flexibility and fewer sigils seems to have met
+with more approval than hostility, though, and I'd argue that a
+driving reason for this is that less noisy, more malleable syntax
+**enables the creation of domain-specific languages**. Rails famously
+leverages Ruby's syntax to create what amounts to a declarative
+language to describe things like entity relationships; other
+frameworks have tried to follow suit and been frustrated by their host
+language's lack of flexibility. I won't name names.
+
+##3. Expressiveness through Expressions
+In CoffeeScript, As in
+[Ruby](http://www.ruby-doc.org/docs/ProgrammingRuby/html/tut_expressions.html), [Scala](http://twitter.github.io/scala_school/basics.html#expressions), [OCaml](http://ocaml.org/tutorials/structure_of_ocaml_programs.html), [Haskell](http://www.haskell.org/haskellwiki/A_brief_introduction_to_Haskell#Expressions) and [Lisp](http://en.wikipedia.org/wiki/S-expression), (almost)
+**everything is an expression**. In simple terms, this means that
+*every language construct returns a value*. An important consequence of
+this is *implicit returns*: because every construct must return a
+value, all functions must return a value, whether `return` is called
+explicitly or not. By default, a function returns the value of the
+last evaluated expression. This, again, makes for a very concise and
+expressive syntax, which feels like a function just *is* its evaluated
+body:
+
+```coffeescript
+square = (x) -> x * x
+```
+
+This applies to conditionals too:
+
+```coffeescript
+x = if true
+  5
+```
+
+(Note that this is not 'idiomatic' CoffeeScript.)
+
+##4. Coalescence
+Like Scheme, [C#, Ruby, Python and JavaScript](http://eddiema.ca/2010/07/07/the-null-coalescing-operator-c-ruby-js-python/), CoffeeScript uses
+*coalescing operators*. To JavaScript's coalescing `||` and `||=`,
+CoffeeScript adds a coalescing existential operator, `?` and `?=`. This is
+particularly useful in combination with the 'everything is an
+expression' behaviour described above:
+
+```coffeescript
+x = (y if y > 5) or z
+```
+
+It can also be used for simple memoization:
+
+```coffeescript
+x = null
+x ?= -> (i for i in [1..20])
+```
+
+And even to conditionally call a function:
+
+```coffeescript
+f = (callback) -> callback?()
+```
+
+##Modern?
+You may have noticed that most of the languages I've mentioned above
+are some distance from 'modern';
+[Scala (released 2003)](http://en.wikipedia.org/wiki/Scala_(programming_language#History)
+has the best claim. The others range from early adulthood
+([Ruby, mid-1990s](http://en.wikipedia.org/wiki/Ruby_(programming_language#History))
+to spry seniority
+([Lisp, late 1950s](http://en.wikipedia.org/wiki/Lisp_(programming_language#History)). Why
+do aspects of their syntaxes, then, seem to contribute to a sense of
+modernity in language design?
+
+I think this is quite simple: they don't look, or act, too much like
+C.
+
+C is a beautiful language, which does what it's designed for very
+well: it
+[interacts with von Neumann-architecture machines](http://en.wikipedia.org/wiki/Von_Neumann_programming_languages)
+at a level appreciably higher than assembly language, whilst being
+highly performant, small, well-specified, and clear. But it became so
+popular that the languages that followed it were pretty much
+*required* to cargo-cult its syntax. What is Java but a traduction of
+Smalltalk with C-like syntax bolted on? What is JavaScript but a
+traduction of Scheme with Java-like syntax bolted on
+([by mandate](http://www.quirksmode.org/js/intro.html), in this case)?
+
+As a result of C's (and its successors') popularity, alternative
+languages like Lisp and Smalltalk rather faded into the background;
+their practical elements were absorbed, but their syntaxes were
+repressed. One could argue that Perl brought some of their syntactic
+ideas closer to the mainstream -- I don't know enough Perl to have an
+opinion. But once you've written Ruby or Python or CoffeeScript,
+all of them strongly influenced by more *humanist* languages like the
+aforementioned, it's hard to justify another set of braces, another
+check for `null`, another `for i = 0;`. And there you are. Old world:
+C. New world: not C.
+
+##Sundries
+The above is a small selection of things I want from a 'modern'
+language. Others might be (not in strict order):
+
+- **Docstrings**. As an Emacs user, I'm a total convert to the idea
+  that a language should facilitate
+  [self-documenting programs](http://www.gnu.org/software/emacs/manual/html_node/elisp/Documentation-Basics.html). [Literate CoffeeScript](http://ashkenas.com/literate-coffeescript/)
+  is a welcome move, but I miss being able to describe method
+  parameters and return values in a defined way. The Emacs Lisp
+  compiler complains if you don't document a function, mentioning the
+  params in order; this should be the norm.
+- [Comprehensions](http://en.wikipedia.org/wiki/List_comprehension)
+  are a very handy construct. I wish CoffeeScript would introduce
+  [object comprehensions](https://github.com/jashkenas/coffee-script/issues/467),
+  though.
+- **Keyword
+  arguments**. [Python can do it](http://docs.python.org/release/1.5.1p1/tut/keywordArgs.html),
+  [Ruby is on board](http://brainspec.com/blog/2012/10/08/keyword-arguments-ruby-2-0/),
+  and you can
+  [kind of fake it in CoffeeScript](http://blog.carbonfive.com/2011/09/28/destructuring-assignment-in-coffeescript/),
+  using destructuring assignment. The king, of course, is Smalltalk,
+  with its
+  [selectors](http://www.jmcsweeney.co.uk/computing/m206/messages.php)
+  -- effectively polymorphic method signatures enhanced by keyword
+  arguments. In Smalltalk, the selector `setRed:Green:AndBlue:` points
+  to a different method than `setRed:` or `setRed:AndGreen:`. Ruby
+  2.0's syntax strikes a nice balance, allowing arbitrary arguments in
+  addition to keyworded ones.
+
+##Finally
+Again, I'm not arguing what a 'modern' language *should* look like so
+much as observing my own prejudice; also, I'm well aware that there
+are horses for courses, and new(ish) languages like
+[Go](http://code.google.com/p/go/) and
+[Rust](http://www.rust-lang.org) are intended for different purposes
+than Ruby or CoffeeScript.
+
+I think it's all to play for at the moment; and I think it'll be a
+shame if yet another C-like language wins. My money *was* on Scala as
+a general purpose application developers' language, but I fear it's
+getting a bit
+[astronautical](http://www.joelonsoftware.com/articles/fog0000000018.html). JavaScript
+is highly optimised, and has a (reasonably)
+[POSIX compliant host environment](https://github.com/melor/node-posix)
+-- can we now consider using it for systems programming? And Ruby
+seems to be becoming the
+[language of the Cloud](http://saviorodrigues.wordpress.com/2011/01/28/rethinking-rubys-role-in-the-cloud/). Perhaps
+we are doomed to, or blessed with, a pluralistic future.
